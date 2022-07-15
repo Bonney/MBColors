@@ -19,8 +19,8 @@ A structure that allows giving specfic names to Colors. LabeledColors have two p
 ```
 let pacificGreen = LabeledColor("Pacific Green", hex: "#127f9c")
 
-pacificGreen.name // "Pacific Green"
-pacificGreen.color // SwiftUI.Color(hex: "#127f9c")
-pacificGreen.label // returns a SwiftUI Label
+Text(pacificGreen.name)
+    .foregroundColor(pacificGreen.color)
+
 ```
 
