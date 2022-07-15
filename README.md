@@ -6,10 +6,21 @@ Examples of utilities included:
 
 ## SwiftUI Color from HEX
 
-Fairly common, but useful to have around. For example, initializing color `#7157be`:
+Fairly common, but useful to have around.
 
 ```
 let ultraviolet = Color(hex: "#7157be")
 ```
 
+## LabeledColor
+
+A structure that allows giving specfic names to Colors. LabeledColors have two parameters – the name, and the color – as well as a generated Label instance for use in UI.
+
+```
+let pacificGreen = LabeledColor("Pacific Green", hex: "#127f9c")
+
+pacificGreen.name // "Pacific Green"
+pacificGreen.color // SwiftUI.Color(hex: "#127f9c")
+pacificGreen.label // returns a SwiftUI Label
+```
 

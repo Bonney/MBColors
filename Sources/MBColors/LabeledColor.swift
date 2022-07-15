@@ -18,6 +18,18 @@ public struct LabeledColor: Identifiable {
     var name: String
     var color: Color
 
+    /// A SwiftUI Label, where the Title is this LabeledColor's Name,
+    /// and the Icon is a circle in this LabeledColor's Color.
+    @ViewBuilder var label: some View {
+        Label {
+            Text(name.capitalized)
+        } icon: {
+            Image(systemName: "circle")
+                .symbolVariant(.fill)
+                .foregroundStyle(color)
+        }
+    }
+
     init(_ name: String, color: Color) {
         self.id = UUID()
         self.name = name
