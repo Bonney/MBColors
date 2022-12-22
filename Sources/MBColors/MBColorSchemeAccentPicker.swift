@@ -9,15 +9,15 @@ import SwiftUI
 import MBUtilities
 
 public extension Color {
-    static let sapphire = Color("Sapphire")
-    static let turquoise = Color("Turquoise")
-    static let malachite = Color("Malachite")
-    static let emerald = Color("Emerald")
-    static let citrine = Color("Citrine")
-    static let topaz = Color("Topaz")
-    static let ruby = Color("Ruby")
-    static let amethyst = Color("Amethyst")
-    static let lapis = Color("Lapis")
+    static let sapphire = Color("Sapphire", bundle: Bundle.module)
+    static let turquoise = Color("Turquoise", bundle: Bundle.module)
+    static let malachite = Color("Malachite", bundle: Bundle.module)
+    static let emerald = Color("Emerald", bundle: Bundle.module)
+    static let citrine = Color("Citrine", bundle: Bundle.module)
+    static let topaz = Color("Topaz", bundle: Bundle.module)
+    static let ruby = Color("Ruby", bundle: Bundle.module)
+    static let amethyst = Color("Amethyst", bundle: Bundle.module)
+    static let lapis = Color("Lapis", bundle: Bundle.module)
 
     static var gemstoneColors: [Color] {
         [.sapphire, .turquoise, .malachite, .emerald, .citrine, .topaz, .ruby, .amethyst, .lapis]
@@ -48,7 +48,21 @@ enum ColorSchemeChoice: Int, Identifiable, Equatable {
     var id: Int { self.rawValue }
 }
 
-struct Color_Demo: View {
+struct MBColorSchemeAccentPicker: View {
+    @Environment(\.colorScheme) var systemColorScheme
+
+    var colorSchemeToUse: ColorScheme {
+        if matchSystem {
+            return systemColorScheme
+        }
+
+        if colorScheme == .dark {
+            return ColorScheme.dark
+        }
+
+        return ColorScheme.light
+    }
+
     @State private var accentColor: LabeledColor = LabeledColor.malachite
     @State private var matchSystem: Bool = true
     @State private var colorScheme: ColorSchemeChoice = .match
@@ -131,11 +145,12 @@ struct Color_Demo: View {
                 rainbow.listRowInsets(EdgeInsets())
             }
         }
+        .preferredColorScheme(colorSchemeToUse)
     }
 }
 
-struct Color_Demo_Previews: PreviewProvider {
+struct MBColorSchemeAccentPicker_Previews: PreviewProvider {
     static var previews: some View {
-        Color_Demo()
+        MBColorSchemeAccentPicker()
     }
 }
