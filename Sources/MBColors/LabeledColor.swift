@@ -15,12 +15,12 @@ import SwiftUI
 ///
 public struct LabeledColor: Identifiable, Hashable {
     public let id: UUID
-    var name: String
-    var color: Color
+    public let name: String
+    public let color: Color
 
     /// A SwiftUI Label, where the Title is this LabeledColor's Name,
     /// and the Icon is a circle in this LabeledColor's Color.
-    @ViewBuilder var label: some View {
+    @ViewBuilder public var label: some View {
         Label {
             Text(name.capitalized)
         } icon: {
@@ -30,7 +30,7 @@ public struct LabeledColor: Identifiable, Hashable {
         }
     }
 
-    init(_ name: String, color: Color) {
+    public init(_ name: String, color: Color) {
         self.id = UUID()
         self.name = name
         self.color = color
