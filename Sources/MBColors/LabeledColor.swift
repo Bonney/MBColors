@@ -13,7 +13,7 @@ import SwiftUI
 ///     - name: the display name for the color
 ///     - color: a SwiftUI Color
 ///
-public struct LabeledColor: Identifiable {
+public struct LabeledColor: Identifiable, Hashable {
     public let id: UUID
     var name: String
     var color: Color

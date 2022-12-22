@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "mbutilities",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Bonney/MBUtilities",
+      "state" : {
+        "branch" : "master",
+        "revision" : "27690475266ff2ffa2e1f0d40d9751bf55ea972c"
+      }
+    }
+  ],
+  "version" : 2
+}
