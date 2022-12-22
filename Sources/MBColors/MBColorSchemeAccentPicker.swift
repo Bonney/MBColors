@@ -129,7 +129,12 @@ struct MBColorSchemeAccentPicker: View {
                             Text(labeledColor.name)
                         } icon: {
                             Squircle()
+                                .overlay {
+                                    Squircle()
+                                        .stroke(.background, lineWidth: (accentColor == labeledColor ? 2 : 0))
+                                }
                                 .frame(width: iconSize, height: iconSize)
+                                .shadow(color: labeledColor.color, radius: 2, x: 0, y: 0)
                                 .foregroundStyle(labeledColor.color.gradient)
                         }
                         .tag(labeledColor)
