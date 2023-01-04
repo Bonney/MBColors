@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-public extension Color {
-    struct watchOS {
+extension Color {
+    public struct watchOS {
         static let yellowGold = LabeledColor("yellow gold", hex: "#edda98")
         static let gold = LabeledColor("gold", hex: "#cead7a")
         static let roseGold = LabeledColor("rose gold", hex: "#f2c1a2")
