@@ -1,11 +1,11 @@
-import UIKit
 import SwiftUI
 
 #if canImport(AppKit) //os(macOS)
 import AppKit
-typealias UXColor = NSColor
+public typealias UXColor = NSColor
 #else
-typealias UXColor = UIColor
+import UIKit
+public typealias UXColor = UIColor
 #endif
 
 public extension UXColor {
