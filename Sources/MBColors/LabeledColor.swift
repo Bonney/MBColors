@@ -68,7 +68,7 @@ public enum LabeledColorSet: CaseIterable {
     case gemstoneColors
     case watchOSColors
 
-    var colors: [LabeledColor] {
+    public var colors: [LabeledColor] {
         switch self {
             case .systemColors:
                 return LabeledColor.systemColors
@@ -79,7 +79,7 @@ public enum LabeledColorSet: CaseIterable {
         }
     }
 
-    static var allColorSets: [LabeledColor] {
+    public static var allColorSets: [LabeledColor] {
         LabeledColorSet.allCases.map { $0.colors }.reduce([], +)
     }
 }
