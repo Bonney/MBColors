@@ -19,6 +19,37 @@ public extension UXColor {
     }
 }
 
+public extension UXColor {
+    var hue: CGFloat {
+        var h: CGFloat = 0.0
+        var s: CGFloat = 0.0
+        var b: CGFloat = 0.0
+        var a: CGFloat = 0.0
+        self.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+        return h
+    }
+
+    var hsb: (CGFloat, CGFloat, CGFloat) {
+        var h: CGFloat = 0.0
+        var s: CGFloat = 0.0
+        var b: CGFloat = 0.0
+        var a: CGFloat = 0.0
+        self.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+        return (h, s, b)
+    }
+}
+
+//extension UIColor {
+//    var hue: CGFloat {
+//        var hue: CGFloat = 0.0
+//        var saturation: CGFloat = 0.0
+//        var brightness: CGFloat = 0.0
+//        var alpha: CGFloat = 0.0
+//        getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+//        return hue
+//    }
+//}
+
 public extension SwiftUI.Color {
     func isBright() -> Bool {
         return UXColor(self).isBright()
@@ -26,6 +57,14 @@ public extension SwiftUI.Color {
 
     var contrastingForegroundColor: Color {
         self.isBright() ? Color.black : Color.white
+    }
+
+    var hue: CGFloat {
+        return UXColor(self).hue
+    }
+
+    var hsb: (CGFloat, CGFloat, CGFloat) {
+        return UXColor(self).hsb
     }
 }
 

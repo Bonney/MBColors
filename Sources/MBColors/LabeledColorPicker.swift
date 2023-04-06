@@ -6,7 +6,24 @@ public enum LabeledColorPickerStyle: Int, Equatable {
 }
 
 private struct LabeledColorPickerDetail: View {
+    private enum SortingOption: Int, Equatable, CaseIterable, Identifiable {
+        case defaultSort = 0
+        case sortByHue = 1
+
+        var id: Int { self.rawValue }
+
+        var name: String {
+            switch self {
+                case .defaultSort:
+                    return "Default"
+                case .sortByHue:
+                    return "Hue"
+            }
+        }
+    }
+
     @Environment(\.dismiss) var dismiss
+    @State private var sortingOption = SortingOption.defaultSort
 
     let style: LabeledColorPickerStyle
     let colorOptions: [LabeledColor]
@@ -21,13 +38,23 @@ private struct LabeledColorPickerDetail: View {
     }
 
     @State private var filter: String = ""
+
     private var filteredOptions: [LabeledColor] {
+        let filtered: [LabeledColor]
+
         if filter.isEmpty {
-            return colorOptions
+            filtered = colorOptions
+        } else {
+            filtered = colorOptions.filter({ c in
+                c.name.localizedCaseInsensitiveContains(filter)
+            })
         }
 
-        return colorOptions.filter { labeledColor in
-            labeledColor.name.localizedCaseInsensitiveContains(filter)
+        switch sortingOption {
+            case .defaultSort:
+                return filtered
+            case .sortByHue:
+                return filtered.sorted { $0.color.hue > $1.color.hue }
         }
     }
 
@@ -48,7 +75,13 @@ private struct LabeledColorPickerDetail: View {
                 .padding(style == .rounded ? 8 : 0)
             }
             .toolbar {
-                ToolbarItem {
+                ToolbarItemGroup {
+                    Picker("Sort", selection: $sortingOption) {
+                        ForEach(SortingOption.allCases) { option in
+                            Text(option.name).tag(option)
+                        }
+                    }
+
                     Button {
                         if let random = colorOptions.randomElement() {
                             select(random)
@@ -101,7 +134,11 @@ public struct LabeledColorPicker: View {
     let style: LabeledColorPickerStyle
     public let colorOptions: [LabeledColor]
 
-    public init(selected: Binding<LabeledColor>, style: LabeledColorPickerStyle, options: [LabeledColor]) {
+    public init(
+        selected: Binding<LabeledColor>,
+        style: LabeledColorPickerStyle,
+        options: [LabeledColor]
+    ) {
         self._selected = selected
         self.style = style
         self.colorOptions = options
