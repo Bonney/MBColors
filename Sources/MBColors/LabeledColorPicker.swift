@@ -1,16 +1,22 @@
 import SwiftUI
 
+public enum LabeledColorPickerStyle: Int, Equatable {
+    case rounded = 0
+    case square = 1
+}
+
 private struct LabeledColorPickerDetail: View {
     @Environment(\.dismiss) var dismiss
 
+    let style: LabeledColorPickerStyle
     let colorOptions: [LabeledColor]
     let onSelection: (LabeledColor) -> Void
 
-    private let columns = Array(repeating: GridItem(.flexible()), count: 3)
     private let cellHeight: Double = 60.0
 
-    init(colorOptions: [LabeledColor], onSelection: @escaping (LabeledColor) -> Void) {
+    init(colorOptions: [LabeledColor], style: LabeledColorPickerStyle, onSelection: @escaping (LabeledColor) -> Void) {
         self.colorOptions = colorOptions
+        self.style = style
         self.onSelection = onSelection
     }
 
@@ -28,7 +34,10 @@ private struct LabeledColorPickerDetail: View {
     var body: some View {
         NavigationStack {
             ScrollView(.vertical) {
-                LazyVGrid(columns: columns) {
+                LazyVGrid(
+                    columns: Array(repeating: GridItem(spacing: style == .rounded ? 8 : 1), count: 3),
+                    spacing: style == .rounded ? 8 : 1
+                ) {
                     ForEach(filteredOptions) { option in
                         cell(for: option)
                             .onTapGesture {
@@ -36,7 +45,7 @@ private struct LabeledColorPickerDetail: View {
                             }
                     }
                 }
-                .padding(8)
+                .padding(style == .rounded ? 8 : 0)
             }
             .toolbar {
                 ToolbarItem {
@@ -61,11 +70,13 @@ private struct LabeledColorPickerDetail: View {
         }
     }
 
-    func cell(for labeledColor: LabeledColor) -> some View {
+    @ViewBuilder func cell(for labeledColor: LabeledColor) -> some View {
+        let shape = RoundedRectangle(cornerRadius: (style == .rounded ? 12 : 0), style: .continuous)
+
         ZStack {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(.tertiary, lineWidth: 1.0)
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            shape
+                .stroke(.tertiary, lineWidth: style == .rounded ? 1 : 0)
+            shape
                 .foregroundColor(labeledColor.color)
         }
             .frame(height: self.cellHeight)
@@ -87,10 +98,12 @@ public struct LabeledColorPicker: View {
     @State private var presentPickerDetail: Bool = false
 
     @Binding public var selected: LabeledColor
+    let style: LabeledColorPickerStyle
     public let colorOptions: [LabeledColor]
 
-    public init(selected: Binding<LabeledColor>, options: [LabeledColor]) {
+    public init(selected: Binding<LabeledColor>, style: LabeledColorPickerStyle, options: [LabeledColor]) {
         self._selected = selected
+        self.style = style
         self.colorOptions = options
     }
 
@@ -109,13 +122,13 @@ public struct LabeledColorPicker: View {
         .foregroundStyle(.primary)
         .sheet(isPresented: $presentPickerDetail) {
             if #available(iOS 16.4, *) {
-                LabeledColorPickerDetail(colorOptions: self.colorOptions) { selection in
+                LabeledColorPickerDetail(colorOptions: self.colorOptions, style: style) { selection in
                     self.selected = selection
                 }
                 .presentationDetents([.medium, .large])
                 .presentationContentInteraction(.scrolls)
             } else {
-                LabeledColorPickerDetail(colorOptions: self.colorOptions) { selection in
+                LabeledColorPickerDetail(colorOptions: self.colorOptions, style: style) { selection in
                     self.selected = selection
                 }
                 .presentationDetents([.medium, .large])
@@ -126,17 +139,17 @@ public struct LabeledColorPicker: View {
 
 private struct LabeledColorPicker_Demo: View {
     @State private var selected: LabeledColor = LabeledColor.malachite
-    private let colorOptions = (LabeledColor.gemstones + LabeledColor.watchOSColors)
 
     var body: some View {
         Form {
-            LabeledColorPicker(selected: $selected, options: colorOptions)
+            LabeledColorPicker(selected: $selected, style: .square, options: LabeledColorSet.allColorSets)
         }
     }
 }
 
 struct LabeledColorPicker_Previews: PreviewProvider {
     static var previews: some View {
+        LabeledColorPickerDetail(colorOptions: LabeledColorSet.allColorSets, style: .rounded, onSelection: { _ in })
         LabeledColorPicker_Demo()
     }
 }

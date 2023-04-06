@@ -46,3 +46,41 @@ public extension LabeledColor {
     }
 }
 
+public extension LabeledColor {
+    static let systemBlue = LabeledColor("Blue", color: Color.blue)
+    static let systemGreen = LabeledColor("Green", color: Color.green)
+    static let systemTeal = LabeledColor("Teal", color: Color.teal)
+    static let systemCyan = LabeledColor("Cyan", color: Color.cyan)
+    static let systemMint = LabeledColor("Mint", color: Color.mint)
+    static let systemIndigo = LabeledColor("Indigo", color: Color.indigo)
+    static let systemPurple = LabeledColor("Purple", color: Color.purple)
+    static let systemRed = LabeledColor("Red", color: Color.red)
+    static let systemOrange = LabeledColor("Orange", color: Color.orange)
+    static let systemYellow = LabeledColor("Yellow", color: Color.yellow)
+
+    static var systemColors: [LabeledColor] {
+        [LabeledColor.systemBlue, .systemGreen, .systemTeal, .systemCyan, .systemMint, .systemIndigo, .systemPurple, .systemOrange, .systemYellow]
+    }
+}
+
+public enum LabeledColorSet: CaseIterable {
+    case systemColors
+    case gemstoneColors
+    case watchOSColors
+
+    var colors: [LabeledColor] {
+        switch self {
+            case .systemColors:
+                return LabeledColor.systemColors
+            case .gemstoneColors:
+                return LabeledColor.gemstones
+            case .watchOSColors:
+                return LabeledColor.watchOSColors
+        }
+    }
+
+    static var allColorSets: [LabeledColor] {
+        LabeledColorSet.allCases.map { $0.colors }.reduce([], +)
+    }
+}
+
