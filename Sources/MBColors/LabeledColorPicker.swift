@@ -58,49 +58,60 @@ private struct LabeledColorPickerDetail: View {
         }
     }
 
-    var body: some View {
-        NavigationStack {
-            ScrollView(.vertical) {
-                LazyVGrid(
-                    columns: Array(repeating: GridItem(spacing: style == .rounded ? 8 : 1), count: 3),
-                    spacing: style == .rounded ? 8 : 1
-                ) {
-                    ForEach(filteredOptions) { option in
-                        cell(for: option)
-                            .onTapGesture {
-                                select(option)
-                            }
+    var scrollView: some View {
+        ScrollView(.vertical) {
+            LazyVGrid(
+                columns: Array(repeating: GridItem(spacing: style == .rounded ? 8 : 1), count: 3),
+                spacing: style == .rounded ? 8 : 1
+            ) {
+                ForEach(filteredOptions) { option in
+                    cell(for: option)
+                        .onTapGesture {
+                            select(option)
+                        }
+                }
+            }
+            .padding(style == .rounded ? 8 : 0)
+        }
+        .toolbar {
+            ToolbarItemGroup {
+                Picker("Sort", selection: $sortingOption) {
+                    ForEach(SortingOption.allCases) { option in
+                        Text(option.name).tag(option)
                     }
                 }
-                .padding(style == .rounded ? 8 : 0)
-            }
-            .toolbar {
-                ToolbarItemGroup {
-                    Picker("Sort", selection: $sortingOption) {
-                        ForEach(SortingOption.allCases) { option in
-                            Text(option.name).tag(option)
-                        }
-                    }
 
-                    Button {
-                        if let random = colorOptions.randomElement() {
-                            select(random)
-                        }
-                    } label: {
-                        Label("Random", systemImage: "shuffle")
+                Button {
+                    if let random = colorOptions.randomElement() {
+                        select(random)
                     }
-                }
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss.callAsFunction()
-                    }
+                } label: {
+                    Label("Random", systemImage: "shuffle")
                 }
             }
-            .navigationTitle("Pick a Color")
-            .navigationBarTitleDisplayMode(.inline)
-            .searchable(text: $filter, placement: SearchFieldPlacement.navigationBarDrawer(displayMode: .always), prompt: Text("Filter..."))
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel") {
+                    dismiss.callAsFunction()
+                }
+            }
+        }
+        .navigationTitle("Pick a Color")
+    }
+
+    var body: some View {
+        #if os(macOS)
+        NavigationStack {
+            scrollView
+                .searchable(text: $filter, placement: .toolbar, prompt: Text("Filter..."))
+        }
+        #else
+        NavigationStack {
+            scrollView
+                .navigationBarTitleDisplayMode(.inline)
+                .searchable(text: $filter, placement: SearchFieldPlacement.navigationBarDrawer(displayMode: .always), prompt: Text("Filter..."))
 
         }
+        #endif
     }
 
     @ViewBuilder func cell(for labeledColor: LabeledColor) -> some View {
@@ -158,7 +169,7 @@ public struct LabeledColorPicker: View {
         .buttonStyle(.plain)
         .foregroundStyle(.primary)
         .sheet(isPresented: $presentPickerDetail) {
-            if #available(iOS 16.4, *) {
+            if #available(iOS 16.4, macOS 13.3, *) {
                 LabeledColorPickerDetail(colorOptions: self.colorOptions, style: style) { selection in
                     self.selected = selection
                 }
