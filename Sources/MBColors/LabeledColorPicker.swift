@@ -110,7 +110,7 @@ private struct LabeledColorPickerDetail: View {
             #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
             #endif
-                .searchable(text: $filter, placement: SearchFieldPlacement.navigationBarDrawer(displayMode: .always), prompt: Text("Filter..."))
+                .searchable(text: $filter, placement: .automatic, prompt: Text("Filter..."))
 
         }
         #endif
