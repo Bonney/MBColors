@@ -107,7 +107,9 @@ private struct LabeledColorPickerDetail: View {
         #else
         NavigationStack {
             scrollView
+            #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
+            #endif
                 .searchable(text: $filter, placement: SearchFieldPlacement.navigationBarDrawer(displayMode: .always), prompt: Text("Filter..."))
 
         }
@@ -169,7 +171,7 @@ public struct LabeledColorPicker: View {
         .buttonStyle(.plain)
         .foregroundStyle(.primary)
         .sheet(isPresented: $presentPickerDetail) {
-            if #available(iOS 16.4, macOS 13.3, *) {
+            if #available(iOS 16.4, macOS 13.3, watchOS 9.4, *) {
                 LabeledColorPickerDetail(colorOptions: self.colorOptions, style: style) { selection in
                     self.selected = selection
                 }
